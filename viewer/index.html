@@ -12,75 +12,58 @@
 
             var milkcocoa = new MilkCocoa("***YOUR_APP_ID***.mlkcca.com");
             var datastore_temp = [];
-            var datastore_hum = [];
-            var datastore_press = [];
+            var datastore_humi = [];
 
             var chart_temp = new createChart();
             chart_temp.setSvg("svgchart_temp");
             chart_temp.init();
 
-            var chart_press = new createChart();
-            chart_press.setSvg("svgchart_press");
-            chart_press.init();
-
-            var chart_hum = new createChart();
-            chart_hum.setSvg("svgchart_hum");
-            chart_hum.init();
+            var chart_humi = new createChart();
+            chart_humi.setSvg("svgchart_humi");
+            chart_humi.init();
 
             milkcocoa.dataStore('***YOUR_DATASTORE_NAME***').stream().size(100).next(function(err, datas) {
                 datastore_temp = datas.map(function(d) {
                     return {
                         timestamp: d.timestamp,
-                        value: d.value.TEMP
+                        value: d.value.temp
                     }
                 });
-                datastore_press = datas.map(function(d) {
+
+                datastore_humi = datas.map(function(d) {
                     return {
                         timestamp: d.timestamp,
-                        value: d.value.PRESS
-                    }
-                });
-                datastore_hum = datas.map(function(d) {
-                    return {
-                        timestamp: d.timestamp,
-                        value: d.value.HUM
+                        value: d.value.humi
                     }
                 });
 
                 console.log("----------------");
                 // console.log(datastore);
                 chart_temp.setDatas(datastore_temp);
-                chart_press.setDatas(datastore_press);
-                chart_hum.setDatas(datastore_hum);
+                chart_humi.setDatas(datastore_humi);
 
                 chart_temp.initialDraw();
-                chart_press.initialDraw();
-                chart_hum.initialDraw();
+                chart_humi.initialDraw();
             });
 
-            milkcocoa.dataStore('esp8266').on('push', function(pushed) {
+            milkcocoa.dataStore('***YOUR_DATASTORE_NAME***').on('push', function(pushed) {
                 datastore_temp.push({
                     timestamp: pushed.timestamp,
-                    value: pushed.value.TEMP
+                    value: pushed.value.temp
                 });
                 datastore_temp.shift();
-                datastore_hum.push({
+                
+                datastore_humi.push({
                     timestamp: pushed.timestamp,
-                    value: pushed.value.HUM
+                    value: pushed.value.humi
                 });
-                datastore_hum.shift();
-                datastore_press.push({
-                    timestamp: pushed.timestamp,
-                    value: pushed.value.PRESS
-                });
-                datastore_press.shift();
+                datastore_humi.shift();
+
 
                 chart_temp.setDatas(datastore_temp);
-                chart_press.setDatas(datastore_press);
-                chart_hum.setDatas(datastore_hum);
+                chart_humi.setDatas(datastore_humi);
                 chart_temp.updateDraw();
-                chart_press.updateDraw();
-                chart_hum.updateDraw();
+                chart_humi.updateDraw();
             });
 
         });
@@ -122,7 +105,7 @@
             stroke: #FFF5C9;
         }
 
-        path_hum {
+        path_humi {
             fill: none;
             stroke: #FFF5C9;
         }
@@ -130,12 +113,10 @@
 </head>
 
 <body>
-    <p style="text-align: center; color: #fff; font-size: 13px;">温度</p>
+    <p style="text-align: center; color: #fff; font-size: 13px;">Temperature</p>
     <div id="svgchart_temp" style="margin: 0 auto; width: 1040px;"></div>
-    <p style="text-align: center; color: #fff; font-size: 13px;">気圧</p>
-    <div id="svgchart_press" style="margin: 0 auto; width: 1040px;"></div>
-    <p style="text-align: center; color: #fff; font-size: 13px;">湿度</p>
-    <div id="svgchart_hum" style="margin: 0 auto; width: 1040px;"></div>
+    <p style="text-align: center; color: #fff; font-size: 13px;">Humidity</p>
+    <div id="svgchart_humi" style="margin: 0 auto; width: 1040px;"></div>
 </body>
 
 </html>

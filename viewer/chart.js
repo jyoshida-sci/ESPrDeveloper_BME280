@@ -21,7 +21,7 @@
     return data.map(function(d) {
       return {
         date: new Date(d.timestamp),
-        value: d.HUM
+        value: d.humi
       };
     });
   }
@@ -30,19 +30,12 @@
     return data.map(function(d) {
       return {
         date: new Date(d.timestamp),
-        value: d.TEMP
+        value: d.temp
       };
     });
   }
 
-  function get_graph_data_press(data) {
-    return data.map(function(d) {
-      return {
-        date: new Date(d.timestamp),
-        value: d.PRESS
-      };
-    });
-  }
+
 
   // グラフを描画するdivのidを指定する
   createChart.prototype.setSvg = function(wrapper_id) {
@@ -146,7 +139,6 @@
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Value");
 
     console.log(dataset);
     // 折れ線の描画
